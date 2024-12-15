@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export default function Book() {
-  const { id } = useParams(); // Extract the `id` from the route
-  const [book, setBook] = useState(null); // Store book details
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const { id } = useParams();
+  const [book, setBook] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); 
 
-  // Fetch book details
   const fetchBookDetails = async () => {
     try {
       const response = await fetch(`http://localhost:3000/books/searchbook/${id}`);
@@ -36,15 +35,19 @@ export default function Book() {
   return (
     <div className="container pt-5 pb-5">
       <h2>{bookDetails.title}</h2>
-      <div className="row">
-        <div className="col-md-4">
+      <div className="row gx-0"> 
+        <div className="col-md-6" style={{ paddingRight: "10px" }}> 
           <img
             src={bookDetails.thumbnailUrl}
             alt={bookDetails.title}
+            style={{
+              width: "300px",
+              height: "450px" 
+            }}
             className="img-fluid"
           />
         </div>
-        <div className="col-md-8">
+        <div className="col-md-6" style={{ paddingRight: "10px" }}> 
           <p>
             <strong>ISBN:</strong> {bookDetails.isbn}
           </p>
@@ -77,16 +80,13 @@ export default function Book() {
             <strong>Recommended:</strong> {review.recommendation ? "Yes" : "No"} |{" "}
             <strong>Date:</strong>{" "}
             {new Date(parseInt(review.review_date)).toLocaleDateString()}
+            <p>{review.review}</p>
+            <h5>Comments:</h5>
+            {book.comments[index] && <p>{book.comments[index].comment}</p>} 
           </li>
         ))}
       </ul>
       <hr />
-      <h3>Comments</h3>
-      <ul>
-        {book.comments.map((comment, index) => (
-          <li key={index}>{comment.comment}</li>
-        ))}
-      </ul>
     </div>
   );
 }

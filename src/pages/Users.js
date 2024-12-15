@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import CardGroup from "react-bootstrap/CardGroup";
 import Row from "react-bootstrap/Row";
-import { Card, Spinner, Button } from "react-bootstrap";
+import { Spinner, Button } from "react-bootstrap";
+import UserCard from "../components/UserCard";
 
 export default function App() {
-  const [users, setUsers] = useState([]); // State to store users
-  const [loading, setLoading] = useState(true); // State to track loading
-  const [error, setError] = useState(null); // State to track errors
-  const [currentPage, setCurrentPage] = useState(1); // To track the current page
-  const [totalPages, setTotalPages] = useState(1); // To track total pages for pagination
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  // Function to fetch users
   const getUsers = async (page = 1) => {
     setLoading(true);
     try {
@@ -19,9 +19,8 @@ export default function App() {
         throw new Error("Failed to fetch users");
       }
       const data = await response.json();
-      console.log("API Response:", data); // Debug API response
+      console.log("API Response:", data);
 
-      // Update states with the data from API response
       setUsers(data.users || []);
       setCurrentPage(data.currentPage || 1);
       setTotalPages(data.totalPages || 1);
@@ -36,12 +35,10 @@ export default function App() {
     }
   };
 
-  // Fetch users when the component is mounted or when the page changes
   useEffect(() => {
     getUsers(currentPage);
   }, [currentPage]);
 
-  // Loading spinner while fetching data
   if (loading) {
     return (
       <div className="d-flex justify-content-center pt-5">
@@ -50,7 +47,6 @@ export default function App() {
     );
   }
 
-  // Error message if fetching fails
   if (error) {
     return (
       <div className="container pt-5">
@@ -65,29 +61,19 @@ export default function App() {
       <CardGroup>
         <Row xs={1} md={2} lg={3} className="d-flex justify-content-around">
           {users.map((user) => (
-            <div key={user._id} className="col">
-              <Card>
-                <Card.Body>
-                  <Card.Title>
-                    {user.first_name} {user.last_name}
-                  </Card.Title>
-                  <Card.Text>
-                    <strong>Job:</strong> {user.job} <br />
-                    <strong>Year of Birth:</strong> {user.year_of_birth} <br />
-                    <strong>Reviews:</strong> {user.reviews.length} <br />
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </div>
+            <UserCard
+              key={user._id}
+              _id={user._id}
+              title={`${user.first_name} ${user.last_name}`}
+            />
           ))}
         </Row>
       </CardGroup>
 
-      {/* Pagination Controls */}
       <div className="d-flex justify-content-center mt-4">
         <Button
-          disabled={currentPage === 1} // Disable if on the first page
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Decrement page
+          disabled={currentPage === 1} 
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} 
         >
           Previous
         </Button>
@@ -95,8 +81,8 @@ export default function App() {
           Page {currentPage || "?"} of {totalPages || "?"}
         </span>
         <Button
-          disabled={currentPage === totalPages} // Disable if on the last page
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} // Increment page
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
         >
           Next
         </Button>
