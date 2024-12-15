@@ -6,24 +6,22 @@ import { Button, Spinner } from "react-bootstrap";
 import BookCard from "../components/BookCard";
 
 export default function App() {
-  const [books, setBooks] = useState([]); // State to store books
-  const [loading, setLoading] = useState(true); // State to track loading
-  const [error, setError] = useState(null); // State to track errors
-  const [currentPage, setCurrentPage] = useState(1); // State to track current page
-  const [totalPages, setTotalPages] = useState(1); // State to track total pages
+  const [books, setBooks] = useState([]); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1); 
 
-  // Function to fetch books
   const getBooks = async (page = 1) => {
     setLoading(true);
     try {
       const response = await fetch(`http://localhost:3000/books?page=${page}`);
       const data = await response.json();
-      console.log(data); // Debug the API response
+      console.log(data);
 
-      // Update books and pagination information
       setBooks(Array.isArray(data.results) ? data.results : []);
       setCurrentPage(page);
-      setTotalPages(data.info.pages || 1); // Extract total pages from API
+      setTotalPages(data.info.pages || 1); 
     } catch (error) {
       console.error("Error fetching books:", error);
       setError("Failed to load books");
@@ -32,12 +30,10 @@ export default function App() {
     }
   };
 
-  // Fetch books when the component mounts or when the page changes
   useEffect(() => {
     getBooks(currentPage);
   }, [currentPage]);
 
-  // Loading spinner while fetching data
   if (loading) {
     return (
       <div className="d-flex justify-content-center pt-5">
@@ -46,7 +42,6 @@ export default function App() {
     );
   }
 
-  // Error message if fetching fails
   if (error) {
     return (
       <div className="container pt-5">
@@ -67,11 +62,10 @@ export default function App() {
         </Row>
       </CardGroup>
 
-      {/* Pagination Controls */}
       <div className="d-flex justify-content-center mt-4">
         <Button
-          disabled={!currentPage || currentPage === 1} // Disable if on the first page
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Decrement page
+          disabled={!currentPage || currentPage === 1} 
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} 
         >
           Previous
         </Button>
@@ -79,8 +73,8 @@ export default function App() {
           Page {currentPage} of {totalPages}
         </span>
         <Button
-          disabled={currentPage >= totalPages} // Disable if on the last page
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} // Increment page
+          disabled={currentPage >= totalPages}
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} 
         >
           Next
         </Button>
