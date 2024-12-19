@@ -17,6 +17,7 @@ import Books from "./pages/Books";
 import Users from "./pages/Users";
 import Book from "./pages/Book";
 import Footer from './components/Footer';
+import User from "./pages/User";
 
 function App() {
   const [userData, setUserData] = useState(undefined);
@@ -39,6 +40,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/books" element={<Books />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/user/:id" element={<User />} />
           <Route path="/book/:id" element={<Book />} />
         </Routes>
         <Footer />
